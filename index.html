@@ -352,9 +352,84 @@
     background: linear-gradient(180deg, rgba(60,50,30,0), rgba(60,50,30,.09)); }
   .rouleau::after { content: ""; position: absolute; left: 10px; right: 10px; top: 46%; height: 1px; background: rgba(120,105,80,.25); }
 
+  /* ===== Relief et mouvement ===== */
+  .btn[hidden] { display: none; }
+  .vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+  /* Ouverture : chaque élément sort du flou, l'un après l'autre, et la page de garde se pose */
+  @keyframes eclot { from { opacity: 0; transform: translateY(18px); filter: blur(10px); } }
+  @keyframes pose { from { opacity: 0; transform: perspective(1400px) translateY(70px) rotateX(26deg) rotateZ(-4deg) scale(.9); filter: blur(6px); } }
+  @keyframes apparait { from { opacity: 0; } }
+  .je-prepare { animation: eclot 1.2s var(--doux) .3s backwards; }
+  .profils { animation: eclot 1.2s var(--doux) .42s backwards; }
+  h1 { animation: eclot 1.4s var(--doux) .55s backwards; }
+  .accroche { animation: eclot 1.2s var(--doux) .85s backwards; }
+  .parcours { animation: eclot 1.3s var(--doux) 1.05s backwards; }
+  .scene { animation: pose 2s var(--doux) .35s backwards; }
+  .controles, .legende-garde { animation: eclot 1.1s var(--doux) 1.5s backwards; }
+  #aura { animation: apparait 1.4s ease-out backwards; }
+  #espace { animation: apparait 2.4s ease-out backwards; }
+
+  /* Page de garde : ombre portée en profondeur, lumière qui glisse avec l'inclinaison */
+  .pile { transition: none; }
+  .a4 { isolation: isolate; }
+  .pile .ombre { position: absolute; inset: 8% 4% -5% 6%; transform: translateZ(-240px); pointer-events: none;
+    background: radial-gradient(closest-side, rgba(19,33,46,.3), rgba(23,83,115,.1) 62%, transparent); filter: blur(24px); }
+  .a4 .reflet { position: absolute; inset: 0; z-index: 2; pointer-events: none; mix-blend-mode: multiply;
+    background: radial-gradient(130% 95% at var(--lx, 28%) var(--ly, 18%), rgba(255,255,255,0) 42%, rgba(19,33,46,.08) 100%),
+      linear-gradient(112deg, transparent 43%, rgba(226,174,65,.075) 49.5%, rgba(23,83,115,.05) 54%, transparent 60%) var(--gx, 70%) 50% / 260% 100% no-repeat; }
+  .g-theme.saisie span::after { content: ""; display: inline-block; width: .09em; height: 1.05em; margin-left: .12em; vertical-align: -.16em; background: currentColor; animation: clignote 1.05s steps(1) infinite; }
+  @keyframes clignote { 50% { opacity: 0; } }
+
+  /* Tampon encreur posé sur le récapitulatif quand le dossier est prêt */
+  .dossier { position: relative; }
+  .tampon { position: absolute; right: 14px; bottom: 10px; z-index: 1; pointer-events: none; display: grid; justify-items: center; gap: 5px;
+    padding: 9px 15px 8px; border: 3px solid currentColor; border-radius: 8px; color: var(--rouge);
+    font-family: var(--machine); font-weight: 700; text-transform: uppercase; line-height: 1; mix-blend-mode: multiply;
+    opacity: 0; transform: rotate(-9deg) scale(2.3);
+    -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='e'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -2.4 2.25'/></filter><rect width='100%' height='100%' filter='url(%23e)'/></svg>") 0 0 / 170px;
+    mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='e'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -2.4 2.25'/></filter><rect width='100%' height='100%' filter='url(%23e)'/></svg>") 0 0 / 170px; }
+  .tampon b { font-size: 21px; letter-spacing: .12em; white-space: nowrap; }
+  .tampon span { font-size: 12px; letter-spacing: .24em; padding-top: 5px; border-top: 1.5px solid currentColor; width: 100%; text-align: center; }
+  .tampon.pose { animation: tamponne .62s cubic-bezier(.3,1.35,.5,1) forwards; }
+  .tampon.leve { opacity: 0; transform: rotate(-9deg); transition: opacity .45s var(--doux); }
+  @media (max-width: 440px) {
+    .tampon { right: 8px; bottom: 12px; padding: 7px 11px 6px; border-width: 2.5px; }
+    .tampon b { font-size: 15px; } .tampon span { font-size: 10px; }
+  }
+  @keyframes tamponne { 0% { opacity: 0; transform: rotate(-3deg) scale(2.3); filter: blur(5px); } 58% { opacity: .95; transform: rotate(-9deg) scale(.95); filter: blur(0); } 100% { opacity: .86; transform: rotate(-9deg) scale(1); } }
+
+  /* Boutons aimantés, éclairés sous le pointeur */
+  .btn { position: relative; isolation: isolate;
+    transition: background .35s var(--doux), color .35s var(--doux), border-color .35s var(--doux), transform .35s var(--doux), box-shadow .35s var(--doux), translate .5s var(--doux); }
+  .btn::after { content: ""; position: absolute; inset: -1px; z-index: -1; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity .4s var(--doux);
+    background: radial-gradient(90px circle at var(--mx, 50%) var(--my, 50%), rgba(255,255,255,.28), transparent 70%); }
+  .btn.creux::after { background: radial-gradient(90px circle at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, var(--bleu) 16%, transparent), transparent 70%); }
+  .btn:hover::after { opacity: 1; }
+
+  /* Tarifs : la carte s'incline vers le pointeur, une lumière chaude la suit */
+  .tarif { position: relative; isolation: isolate; overflow: hidden; }
+  .tarif:hover { transition: transform .22s ease-out, box-shadow .5s var(--doux), border-color .5s var(--doux); }
+  .tarif::after { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: 0; transition: opacity .5s var(--doux);
+    background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 30%), color-mix(in srgb, var(--or) 18%, transparent), color-mix(in srgb, var(--bleu) 6%, transparent) 45%, transparent 72%); }
+  .tarif:hover::after, .tarif:focus-visible::after { opacity: 1; }
+
+  /* Fil de lecture sous l'en-tête */
+  .tete::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; pointer-events: none; transform-origin: 0 50%; transform: scaleX(var(--lu, 0));
+    background: linear-gradient(90deg, var(--bleu), var(--rouge) 70%, var(--or)); box-shadow: 0 0 12px color-mix(in srgb, var(--bleu) 35%, transparent); }
+
+  /* Compteurs à rouleaux */
+  .compteurs b { font-variant-numeric: tabular-nums; }
+  .compteurs b span { font-size: inherit; color: inherit; }
+  .roue { display: inline-block; height: 1em; overflow: hidden; vertical-align: top; user-select: none; }
+  .roue i { display: block; font-style: normal; transition: transform 2.2s var(--doux); }
+  .roue i span { display: block; height: 1em; }
+
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     .a4, h1 em { animation: none; }
+    .je-prepare, .profils, h1, .accroche, .parcours, .scene, .controles, .legende-garde, #aura, #espace, .g-theme.saisie span::after { animation: none; }
+    .tampon.pose { animation: none; opacity: .86; transform: rotate(-9deg); }
     .chapitre.en-attente { transform: none; }
     *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
   }
@@ -394,7 +469,7 @@
     <div class="visuel">
       <div class="scene" id="scene">
         <div class="pile" id="pile">
-          <span class="dos d5" aria-hidden="true"></span><span class="dos d4" aria-hidden="true"></span><span class="dos d3" aria-hidden="true"></span><span class="dos d2" aria-hidden="true"></span><span class="dos d1" aria-hidden="true"></span>
+          <span class="ombre" aria-hidden="true"></span><span class="dos d5" aria-hidden="true"></span><span class="dos d4" aria-hidden="true"></span><span class="dos d3" aria-hidden="true"></span><span class="dos d2" aria-hidden="true"></span><span class="dos d1" aria-hidden="true"></span>
           <div class="a4" role="img" aria-label="Ta page de garde, composée au format officiel avec ton thème">
             <div class="garde">
               <div class="g-bandeau">
@@ -411,6 +486,7 @@
               <div class="g-annee">Année académique 2026-2027</div>
             </div>
             <div class="faisceau" id="faisceau" aria-hidden="true"></div>
+            <div class="reflet" aria-hidden="true"></div>
           </div>
         </div>
       </div>
@@ -467,7 +543,10 @@
 
       <div class="etape" data-etape="4">
         <p class="question">Ton dossier est prêt à partir.</p>
-        <dl class="recap" id="recap"></dl>
+        <div class="dossier">
+          <dl class="recap" id="recap"></dl>
+          <div class="tampon" id="tampon" aria-hidden="true"><b>Prêt à partir</b><span id="tampon-date"></span></div>
+        </div>
         <div class="fin-actions">
           <a class="btn" id="b-reserver" href="#parcours" target="_blank" rel="noopener">Réserver ma place sur WhatsApp <span class="fl" aria-hidden="true">→</span></a>
           <button class="btn creux" type="button" id="b-copier">Copier mon récapitulatif</button>
@@ -627,7 +706,8 @@
       ? '<span class="g-logo">Logo de l\'établissement</span><span class="g-logo">Logo de la structure d\'accueil</span>'
       : '<span class="g-logo seul">Logo de l\'établissement</span>';
     $('g-diplome').textContent = o.diplome;
-    $('g-theme').textContent = etat.theme.trim() || 'La gestion de la trésorerie dans une PME de distribution';
+    var gt = $('g-theme'); if (!gt.firstElementChild) gt.appendChild(document.createElement('span'));
+    gt.firstElementChild.textContent = etat.theme.trim() || 'La gestion de la trésorerie dans une PME de distribution';
     $('g-nom').textContent = etat.nom.trim() || 'NOM Prénom';
     $('g-encadrement').className = 'g-encadrement' + (etat.type === 'stage' ? '' : ' un');
     $('g-encadrement').innerHTML = etat.type === 'stage'
@@ -646,11 +726,15 @@
     puces.forEach(function (p, i) { setTimeout(function () { p.classList.add('ok'); }, reduit ? 0 : 320 + i * 260); });
   }
 
+  /* Le fond 3D répond à la page : remplacée par la vraie rafale une fois three.js prêt */
+  var rafale = function () {};
+
   /* Profil : le titre et la page de garde parlent à chaque étudiant */
   function choisirType(t, defiler) {
     if (!OFFRES[t]) return;
     var changer = t !== etat.type;
     etat.type = t; garder();
+    if (changer) { rafale(1); document.dispatchEvent(new CustomEvent('aisaa:profil')); }
     tous('.profil').forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.type === t)); });
     var h = $('h-doc');
     if (changer && !reduit) {
@@ -673,6 +757,21 @@
     $('b-retour').hidden = etape === 1;
     $('b-suite').hidden = etape === TOTAL;
     if (etape === TOTAL) recap();
+    tamponner(etape === TOTAL);
+  }
+
+  /* Tampon « Prêt à partir » : il tombe sur le récapitulatif à la dernière étape, la page de garde repasse ses contrôles */
+  $('tampon-date').textContent = new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' }).toUpperCase();
+  function tamponner(poser) {
+    var tp = $('tampon'), pose = tp.classList.contains('pose');
+    if (poser && !pose) {
+      tp.classList.remove('leve'); void tp.offsetWidth; tp.classList.add('pose');
+      rafale(.8); controler();
+      var ds = tp.parentNode;
+      if (!reduit && ds.animate) setTimeout(function () {
+        ds.animate([{ scale: '1' }, { scale: '.985' }, { scale: '1' }], { duration: 460, easing: 'cubic-bezier(.3,1.6,.5,1)' });
+      }, 340);
+    } else if (!poser && pose) { tp.classList.remove('pose'); tp.classList.add('leve'); }
   }
   $('b-suite').addEventListener('click', function () {
     if (etape === 1 && !etat.theme.trim()) { $('f-theme').placeholder = 'Écris ton thème, même provisoire'; $('f-theme').focus(); return; }
@@ -686,10 +785,14 @@
     el.addEventListener('input', function () {
       etat[cle] = el.value; garder();
       if (cle === 'theme' || cle === 'nom') composer(true);
+      if (cle === 'theme') rafale(.12);
       if (cle === 'depot') verifierDepot();
     });
   }
   lier('f-theme', 'theme'); lier('f-nom', 'nom'); lier('f-depot', 'depot'); lier('f-prenom', 'prenom');
+  /* Le curseur de la machine clignote sur la page de garde pendant que le thème s'écrit */
+  $('f-theme').addEventListener('focus', function () { $('g-theme').classList.add('saisie'); });
+  $('f-theme').addEventListener('blur', function () { $('g-theme').classList.remove('saisie'); });
 
   tous('[data-statut]').forEach(function (b) {
     b.setAttribute('aria-pressed', String(b.dataset.statut === etat.statut));
@@ -751,14 +854,24 @@
   choisirType(etat.type); verifierDepot(); montrer(1); composer(false);
   setTimeout(controler, 900);
 
-  /* Inclinaison de la pile */
-  var scene = $('scene'), pile = $('pile');
+  /* Inclinaison de la pile : elle suit le pointeur avec un amorti, la lumière glisse sur la page */
+  var scene = $('scene'), pile = $('pile'), a4 = pile.querySelector('.a4');
   if (!reduit && window.matchMedia('(pointer: fine)').matches) {
+    var cible = { x: 0, y: 0 }, pos = { x: 0, y: 0 }, bouge = 0;
+    var incliner = function () {
+      pos.x += (cible.x - pos.x) * .09; pos.y += (cible.y - pos.y) * .09;
+      pile.style.transform = 'rotateY(' + (pos.x * 24).toFixed(2) + 'deg) rotateX(' + (-pos.y * 16).toFixed(2) + 'deg)';
+      a4.style.setProperty('--lx', (28 + pos.x * 90).toFixed(1) + '%');
+      a4.style.setProperty('--ly', (18 + pos.y * 80).toFixed(1) + '%');
+      a4.style.setProperty('--gx', (70 - pos.x * 120).toFixed(1) + '%');
+      bouge = Math.abs(cible.x - pos.x) + Math.abs(cible.y - pos.y) > .0015 ? requestAnimationFrame(incliner) : 0;
+    };
     scene.addEventListener('pointermove', function (e) {
-      var r = scene.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
-      pile.style.transform = 'rotateY(' + (x * 8).toFixed(2) + 'deg) rotateX(' + (-y * 6).toFixed(2) + 'deg)';
+      var r = scene.getBoundingClientRect();
+      cible.x = (e.clientX - r.left) / r.width - .5; cible.y = (e.clientY - r.top) / r.height - .5;
+      if (!bouge) bouge = requestAnimationFrame(incliner);
     });
-    scene.addEventListener('pointerleave', function () { pile.style.transform = ''; });
+    scene.addEventListener('pointerleave', function () { cible.x = cible.y = 0; if (!bouge) bouge = requestAnimationFrame(incliner); });
   }
 
   /* Protocole */
@@ -770,8 +883,24 @@
     etapesP.forEach(function (x) { x.classList.toggle('actif', x === li); });
     Array.prototype.forEach.call(jours.children, function (s, k) { var j = k + 1; s.classList.toggle('on', j >= de && j <= a); s.classList.toggle('fin', j === 14); });
   }
-  etapesP.forEach(function (li) { var b = li.querySelector('button'); ['mouseenter', 'focus', 'click'].forEach(function (ev) { b.addEventListener(ev, function () { allumer(li); }); }); });
+  var touche = false;
+  etapesP.forEach(function (li) { var b = li.querySelector('button'); ['mouseenter', 'focus', 'click'].forEach(function (ev) { b.addEventListener(ev, function () { touche = true; allumer(li); }); }); });
   allumer(etapesP[2]);
+  /* À la première apparition, les quatorze jours s'allument un à un avant de se poser sur une étape */
+  if (!reduit && 'IntersectionObserver' in window) {
+    var balaye = new IntersectionObserver(function (es) {
+      if (!es[0].isIntersecting || touche) return;
+      balaye.disconnect();
+      var cases = jours.children;
+      etapesP.forEach(function (x) { x.classList.remove('actif'); });
+      Array.prototype.forEach.call(cases, function (s, k) {
+        s.classList.remove('on');
+        setTimeout(function () { if (!touche) s.classList.add('on'); }, 150 + k * 75);
+      });
+      setTimeout(function () { if (!touche) allumer(etapesP[2]); }, 150 + cases.length * 75 + 650);
+    }, { threshold: .9 });
+    balaye.observe(jours);
+  }
 
   /* Entrée des chapitres : coupée tant que l'effet de page n'est pas validé */
   var FEUILLETAGE = false;
@@ -792,7 +921,10 @@
     { c: [226, 174, 65], a: .2, x: .55, y: .9, r: .55, vx: .00008, vy: -.0001 }
   ];
   function tailleAura() { w = cv.width = innerWidth * dpr; h = cv.height = innerHeight * dpr; }
+  var bAura = 0;
+  function lancerAura() { if (!bAura) bAura = requestAnimationFrame(aura); }
   function aura(t) {
+    bAura = 0;
     cx.clearRect(0, 0, w, h);
     lum.forEach(function (l, k) {
       var px = (l.x + Math.sin(t * l.vx + k) * .08 + tx * .02 * (k + 1)) * w, py = (l.y + Math.cos(t * l.vy + k * 2) * .08 + ty * .02 * (k + 1)) * h;
@@ -800,9 +932,10 @@
       g.addColorStop(0, 'rgba(' + l.c + ',' + l.a + ')'); g.addColorStop(1, 'rgba(' + l.c + ',0)');
       cx.fillStyle = g; cx.fillRect(0, 0, w, h);
     });
-    if (!reduit && !document.hidden) requestAnimationFrame(aura);
+    if (!reduit && !document.hidden) lancerAura();
   }
-  addEventListener('resize', tailleAura); tailleAura(); requestAnimationFrame(aura);
+  addEventListener('resize', function () { tailleAura(); if (reduit) lancerAura(); }); tailleAura(); lancerAura();
+  document.addEventListener('visibilitychange', function () { if (!document.hidden && !reduit) lancerAura(); });
 
   /* Espace : de vraies feuilles des années 80, éclairées, qui dérivent */
   function papier(g, W, H, teinte) {
@@ -865,22 +998,38 @@
   }
   function courbe(geo, force) {
     var p = geo.attributes.position, l = geo.parameters.width, hh = geo.parameters.height;
-    for (var i = 0; i < p.count; i++) {
-      var x = p.getX(i), y = p.getY(i);
-      p.setZ(i, force * Math.pow((x + l / 2) / l, 2.2) + Math.sin((y / hh + .5) * Math.PI) * force * .25);
+    var n = p.count, base = new Float32Array(n), u = new Float32Array(n), v = new Float32Array(n);
+    for (var i = 0; i < n; i++) {
+      /* Borné à 0 : en Float32 le bord gauche tombe à -2e-8, et la puissance rendait NaN (bord de feuille manquant) */
+      u[i] = Math.max(0, Math.min(1, (p.getX(i) + l / 2) / l)); v[i] = Math.max(0, Math.min(1, p.getY(i) / hh + .5));
+      base[i] = force * Math.pow(u[i], 2.2) + Math.sin(v[i] * Math.PI) * force * .25;
+      p.setZ(i, base[i]);
     }
-    geo.computeVertexNormals(); return geo;
+    geo.computeVertexNormals();
+    return { geo: geo, base: base, u: u, v: v };
   }
+  /* Une onde traverse la feuille : le papier respire dans un courant d'air */
+  function onduler(f, t, amp) {
+    var u = f.userData, p = f.geometry.attributes.position, a = p.array;
+    for (var i = 0, n = p.count; i < n; i++) {
+      var uu = u.u[i], vv = u.v[i];
+      a[i * 3 + 2] = u.base[i] + amp * ((.35 + uu * uu) * Math.sin(uu * 5.5 + vv * 1.7 - t * u.w + u.ph) + .3 * (uu - .5) * Math.sin(vv * 4.2 - t * u.w * .8 + u.ph * 2));
+    }
+    p.needsUpdate = true; f.geometry.computeVertexNormals();
+  }
+  function amorti(a, k) { return 1 - Math.pow(1 - a, k); }
   function espace3d() {
     if (!window.THREE) return;
     var T = window.THREE, rendu;
     try { rendu = new T.WebGLRenderer({ canvas: $('espace'), alpha: true, antialias: true }); } catch (e) { return; }
     rendu.setPixelRatio(Math.min(devicePixelRatio || 1, 1.5));
-    var sc = new T.Scene(); sc.fog = new T.Fog(0xEEF1F2, 5, 27);
+    /* À l'ouverture, la brume est dense et la caméra part du fond de la pile */
+    var brume = reduit ? new T.Fog(0xEEF1F2, 5, 27) : new T.Fog(0xEEF1F2, 1, 12);
+    var sc = new T.Scene(); sc.fog = brume;
     var cam = new T.PerspectiveCamera(48, 1, .1, 100); cam.position.set(0, 0, 10);
-    sc.add(new T.AmbientLight(0xFFF6E6, .78));
-    var soleil = new T.DirectionalLight(0xFFE8C4, .55); soleil.position.set(-4, 6, 8); sc.add(soleil);
-    var ciel = new T.DirectionalLight(0xCFE0EE, .25); ciel.position.set(5, -3, 4); sc.add(ciel);
+    sc.add(new T.AmbientLight(0xFFF6E6, .7));
+    var soleil = new T.DirectionalLight(0xFFE8C4, .36); soleil.position.set(-4, 6, 8); sc.add(soleil);
+    var ciel = new T.DirectionalLight(0xCFE0EE, .12); ciel.position.set(5, -3, 4); sc.add(ciel);
     var modeles = [];
     for (var i = 0; i < 5; i++) modeles.push({ c: textureTapee(), ratio: 1.414 });
     for (i = 0; i < 2; i++) modeles.push({ c: textureListing(), ratio: 1.414, trous: true });
@@ -889,36 +1038,107 @@
     var feuilles = [];
     for (i = 0; i < 22; i++) {
       var k = i % modeles.length, md = modeles[k];
-      var geo = courbe(new T.PlaneGeometry(1.7, 1.7 * md.ratio, 14, 18), .12 + Math.random() * .35);
-      var mat = new T.MeshBasicMaterial({ map: cartes[k], side: T.DoubleSide, transparent: true, opacity: .62 + Math.random() * .33, alphaTest: md.trous ? .5 : 0 });
-      var f = new T.Mesh(geo, mat);
+      var c = courbe(new T.PlaneGeometry(1.7, 1.7 * md.ratio, 14, 18), .12 + Math.random() * .35);
+      /* Lambert : le papier est vraiment éclairé, la lumière roule sur les plis */
+      var mat = new T.MeshLambertMaterial({ map: cartes[k], side: T.DoubleSide, transparent: true, opacity: .62 + Math.random() * .33, alphaTest: md.trous ? .5 : 0 });
+      var f = new T.Mesh(c.geo, mat); f.frustumCulled = false;
       var cote = i % 2 ? 1 : -1;
       f.position.set(cote * (3 + Math.random() * 8), (Math.random() - .5) * 13, -2 - Math.random() * 44);
       f.rotation.set((Math.random() - .5) * .5, cote * -(.15 + Math.random() * .45), (Math.random() - .5) * .7);
       var e = 1.1 + Math.random() * 1.1; f.scale.set(e, e, e);
-      f.userData = { ry: f.rotation.y, vr: (Math.random() - .5) * .0012, vy: .0012 + Math.random() * .0025, ph: Math.random() * 6.28, rx: f.rotation.x };
+      f.userData = { ry: f.rotation.y, rx: f.rotation.x, rz: f.rotation.z, x0: f.position.x, vr: (Math.random() - .5) * .0012, vy: .0012 + Math.random() * .0025, ph: Math.random() * 6.28,
+        base: c.base, u: c.u, v: c.v, w: .0011 + Math.random() * .0007, souffle: 0, sens: cote, dx: 0, rafaleA: 0, rafaleF: 0 };
       sc.add(f); feuilles.push(f);
     }
-    function redim() { rendu.setSize(innerWidth, innerHeight, false); cam.aspect = innerWidth / innerHeight; cam.updateProjectionMatrix(); }
-    addEventListener('resize', redim); redim();
-    var zc = 10, px = 0, py = 0;
-    function tick(t) {
-      var hmax = Math.max(1, document.documentElement.scrollHeight - innerHeight);
-      zc += ((10 - (scrollY / hmax) * 40) - zc) * .045;
-      px += (tx * 1.5 - px) * .04; py += (-ty - py) * .04;
-      cam.position.set(px, py, zc); cam.lookAt(px * .3, py * .3, zc - 10);
+
+    /* Poussière de lumière entre les feuilles, écartée de la trajectoire de la caméra */
+    var nb = innerWidth < 700 ? 70 : 140, pp = new Float32Array(nb * 3), pc = new Float32Array(nb * 3), pv = [];
+    var teintes = [[.886, .682, .255], [.09, .325, .451], [.96, .88, .7]];
+    for (i = 0; i < nb; i++) {
+      var ax, ay;
+      do { ax = (Math.random() - .5) * 26; ay = (Math.random() - .5) * 18; } while (Math.abs(ax) < 2.2 && Math.abs(ay) < 1.6);
+      var tc = teintes[i % 4 === 1 ? 1 : (i % 2 ? 0 : 2)];
+      pp[i * 3] = ax; pp[i * 3 + 1] = ay; pp[i * 3 + 2] = 6 - Math.random() * 52;
+      pc[i * 3] = tc[0]; pc[i * 3 + 1] = tc[1]; pc[i * 3 + 2] = tc[2];
+      pv.push({ x0: ax, vy: .002 + Math.random() * .004, ph: Math.random() * 6.28 });
+    }
+    var point = document.createElement('canvas'); point.width = point.height = 64;
+    var gp = point.getContext('2d'), rg = gp.createRadialGradient(32, 32, 0, 32, 32, 32);
+    rg.addColorStop(0, 'rgba(255,255,255,1)'); rg.addColorStop(.35, 'rgba(255,255,255,.5)'); rg.addColorStop(1, 'rgba(255,255,255,0)');
+    gp.fillStyle = rg; gp.fillRect(0, 0, 64, 64);
+    var geoP = new T.BufferGeometry();
+    geoP.setAttribute('position', new T.BufferAttribute(pp, 3)); geoP.setAttribute('color', new T.BufferAttribute(pc, 3));
+    var poussiere = new T.Points(geoP, new T.PointsMaterial({ size: .14, map: new T.CanvasTexture(point), vertexColors: true, transparent: true, opacity: .75, depthWrite: false }));
+    poussiere.frustumCulled = false; sc.add(poussiere);
+
+    /* Rafale : la page appelle le vent (choix du profil, frappe du thème, tampon). Elle part du centre et s'étend vers les bords */
+    rafale = function (force) {
+      if (reduit) return;
+      var t0 = performance.now();
       feuilles.forEach(function (f) {
         var u = f.userData;
-        f.rotation.y = u.ry + Math.sin(t * .0002 * (1 + u.vr * 300) + u.ph) * .45;
-        f.rotation.x = u.rx + Math.sin(t * .0005 + u.ph) * .12;
-        f.position.y += u.vy; f.position.x += Math.sin(t * .00025 + u.ph) * .0025;
-        if (f.position.y > 9) f.position.y = -9;
+        if (u.rafaleA) u.rafaleF = Math.max(u.rafaleF, force);
+        else { u.rafaleA = t0 + Math.abs(u.x0) * 45 + Math.random() * 140; u.rafaleF = force; }
       });
+    };
+
+    function redim() { rendu.setSize(innerWidth, innerHeight, false); cam.aspect = innerWidth / innerHeight; cam.updateProjectionMatrix(); }
+    addEventListener('resize', function () { redim(); if (reduit) lancer(); }); redim();
+    function cibleZ() { return 10 - (scrollY / Math.max(1, document.documentElement.scrollHeight - innerHeight)) * 40; }
+    var zc = reduit ? cibleZ() : cibleZ() - 30, px = 0, py = 0;
+    var avant = 0, dernierY = scrollY, energie = 0, sensDefil = 1, lx = tx, ly = ty, vit = 0, v3 = new T.Vector3(), boucle = 0;
+    function lancer() { if (!boucle) boucle = requestAnimationFrame(tick); }
+    function tick(t) {
+      boucle = 0;
+      var k = avant ? Math.min(3, (t - avant) / 16.667) : 1; avant = t;
+      /* Travelling d'ouverture : la caméra recule à travers les feuilles pendant que la brume se lève */
+      zc += (cibleZ() - zc) * amorti(brume.far < 26 ? .028 : .045, k);
+      brume.near += (5 - brume.near) * amorti(.02, k); brume.far += (27 - brume.far) * amorti(.02, k);
+      px += (tx * 1.5 - px) * amorti(.04, k); py += (-ty - py) * amorti(.04, k);
+      cam.position.set(px, py, zc); cam.lookAt(px * .3, py * .3, zc - 10); cam.updateMatrixWorld();
+
+      /* Défilement : plus on lit vite, plus le courant d'air emporte les feuilles dans le sens de la lecture */
+      var dy = scrollY - dernierY; dernierY = scrollY;
+      if (dy) sensDefil = dy > 0 ? 1 : -1;
+      energie += (Math.min(1, Math.abs(dy) / (60 * k)) - energie) * amorti(.07, k);
+      /* Pointeur : sa vitesse fait un souffle qui écarte les feuilles proches */
+      var mx = tx - lx, my = ty - ly; lx = tx; ly = ty;
+      vit += (Math.min(1, Math.sqrt(mx * mx + my * my) * 40 / k) - vit) * amorti(.15, k);
+
+      for (var i = 0; i < feuilles.length; i++) {
+        var f = feuilles[i], u = f.userData;
+        if (u.rafaleA && t >= u.rafaleA) { u.souffle = Math.min(1.6, u.souffle + u.rafaleF); u.sens = u.x0 > 0 ? 1 : -1; u.rafaleA = 0; }
+        if (vit > .02) {
+          v3.copy(f.position).project(cam);
+          var ex = (v3.x - tx * 2) * cam.aspect, ey = v3.y + ty * 2, d = Math.sqrt(ex * ex + ey * ey);
+          if (v3.z < 1 && d < .75) { var inf = 1 - d / .75; u.souffle = Math.min(1.6, u.souffle + inf * inf * vit * .09 * k); u.sens = ex >= 0 ? 1 : -1; }
+        }
+        u.souffle *= Math.pow(.972, k);
+        u.dx = (u.dx + u.sens * u.souffle * .012 * k) * Math.pow(.985, k);
+        f.rotation.y = u.ry + Math.sin(t * .0002 * (1 + u.vr * 300) + u.ph) * .45 + u.sens * u.souffle * .55;
+        f.rotation.x = u.rx + Math.sin(t * .0005 + u.ph) * .12 + Math.sin(t * .006 + u.ph) * u.souffle * .12;
+        f.rotation.z = u.rz + u.sens * u.souffle * .18;
+        f.position.x = u.x0 + Math.sin(t * .00025 + u.ph) * .6 + u.dx;
+        f.position.y += (u.vy * (1 + energie * 7 * sensDefil) + u.souffle * .004) * k;
+        if (f.position.y > 9) f.position.y -= 18; else if (f.position.y < -9) f.position.y += 18;
+        var dz = zc - f.position.z;
+        if (dz > -2 && dz < 30) onduler(f, t, .07 + u.souffle * .32 + energie * .28);
+      }
+
+      var a = geoP.attributes.position.array;
+      for (i = 0; i < nb; i++) {
+        var q = pv[i];
+        a[i * 3] = q.x0 + Math.sin(t * .00035 + q.ph) * .5;
+        a[i * 3 + 1] += q.vy * (1 + energie * 9 * sensDefil) * k;
+        if (a[i * 3 + 1] > 9) a[i * 3 + 1] -= 18; else if (a[i * 3 + 1] < -9) a[i * 3 + 1] += 18;
+      }
+      geoP.attributes.position.needsUpdate = true;
+
       rendu.render(sc, cam);
-      if (!reduit && !document.hidden) requestAnimationFrame(tick);
+      if (!reduit && !document.hidden) lancer();
     }
-    document.addEventListener('visibilitychange', function () { if (!document.hidden && !reduit) { requestAnimationFrame(tick); requestAnimationFrame(aura); } });
-    requestAnimationFrame(tick);
+    document.addEventListener('visibilitychange', function () { if (!document.hidden && !reduit) { avant = 0; lancer(); } });
+    lancer();
   }
   var polices = document.fonts && document.fonts.load ? Promise.all([document.fonts.load('15px "Courier Prime"'), document.fonts.load('italic 18px "Tinos"')]) : Promise.resolve();
   polices.then(espace3d, espace3d);
@@ -967,6 +1187,60 @@
   scene.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse' && ouvert) { ouvert = false; refermer(); } });
   scene.addEventListener('click', function () { if (!ouvert) defiler(false); });
   setTimeout(function () { if (!ouvert) defiler(false); }, 1300);
+  /* Changer de document fait jaillir les feuillets, comme on rebat un dossier */
+  document.addEventListener('aisaa:profil', function () { if (!ouvert) defiler(false); });
+
+  /* Fil de lecture sous l'en-tête */
+  var tete = document.querySelector('.tete'), lu = 0;
+  function progression() {
+    lu = 0;
+    var hmax = document.documentElement.scrollHeight - innerHeight;
+    tete.style.setProperty('--lu', hmax > 0 ? Math.min(1, scrollY / hmax).toFixed(4) : '0');
+  }
+  addEventListener('scroll', function () { if (!lu) lu = requestAnimationFrame(progression); }, { passive: true });
+  addEventListener('resize', progression); progression();
+
+  /* Boutons aimantés et cartes de tarif qui s'inclinent : seulement avec une souris */
+  if (!reduit && window.matchMedia('(pointer: fine)').matches) {
+    tous('.btn').forEach(function (b) {
+      b.addEventListener('pointermove', function (e) {
+        var r = b.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+        b.style.setProperty('--mx', x.toFixed(0) + 'px'); b.style.setProperty('--my', y.toFixed(0) + 'px');
+        b.style.translate = ((x / r.width - .5) * 10).toFixed(1) + 'px ' + ((y / r.height - .5) * 7).toFixed(1) + 'px';
+      });
+      b.addEventListener('pointerleave', function () { b.style.translate = ''; });
+    });
+    tous('.tarif').forEach(function (b) {
+      b.addEventListener('pointermove', function (e) {
+        var r = b.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+        b.style.setProperty('--mx', (x * 100).toFixed(1) + '%'); b.style.setProperty('--my', (y * 100).toFixed(1) + '%');
+        b.style.transform = 'perspective(900px) translateY(-6px) rotateX(' + ((.5 - y) * 9).toFixed(2) + 'deg) rotateY(' + ((x - .5) * 11).toFixed(2) + 'deg)';
+      });
+      b.addEventListener('pointerleave', function () { b.style.transform = ''; });
+    });
+  }
+
+  /* Compteurs à rouleaux : les chiffres défilent quand ils entrent à l'écran */
+  var compteurs = tous('.compteurs b');
+  if (!reduit && 'IntersectionObserver' in window) {
+    var BANDE = '01234567890123456789'.split('').map(function (c) { return '<span>' + c + '</span>'; }).join('');
+    compteurs.forEach(function (b) {
+      var txt = b.textContent, html = '<span class="vh">' + txt + '</span><span aria-hidden="true">';
+      txt.split('').forEach(function (c) { html += /\d/.test(c) ? '<span class="roue"><i data-d="' + c + '">' + BANDE + '</i></span>' : c; });
+      b.innerHTML = html + '</span>';
+    });
+    var vu = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        vu.unobserve(e.target);
+        Array.prototype.forEach.call(e.target.querySelectorAll('.roue i'), function (i, n) {
+          i.style.transitionDelay = (n * 140) + 'ms';
+          i.style.transform = 'translateY(' + -(10 + +i.dataset.d) + 'em)';
+        });
+      });
+    }, { threshold: .7 });
+    compteurs.forEach(function (b) { vu.observe(b); });
+  }
 
   /* Bloc-notes : coupé tant que l'effet de page n'est pas validé */
   var FEUILLETAGE = false;
