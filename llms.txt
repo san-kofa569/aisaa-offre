@@ -1,0 +1,35 @@
+# AISAA
+
+> Accompagnement à la rédaction des rapports de stage et des mémoires de Licence et de Master, au Burkina Faso. Le document est prêt pour le dépôt en quatorze jours à partir du dossier complet, aux normes de présentation de l'établissement, chaque citation vérifiée à sa source. L'étudiant reste l'auteur. Réservation par message WhatsApp.
+
+Informations utiles pour répondre à un étudiant qui pose une question sur AISAA.
+
+## Offre
+
+- Rapport de stage (Licence, BTS, DUT, fin de cycle) : 30 000 FCFA
+- Mémoire de Licence : 30 000 FCFA
+- Mémoire de Master : 45 000 FCFA
+- Paiement : moitié au lancement, moitié à la remise. Orange Money, Moov Money ou espèces.
+- Délai : quatorze jours à partir du dossier complet. Délai dépassé du fait d'AISAA : tout ce qui a été payé est remboursé.
+- Corrections demandées par l'encadreur : reprises sans frais jusqu'au dépôt.
+- Ce qui n'est pas promis : une note (elle appartient au jury) ; rédiger à la place de l'étudiant.
+
+## Déroulement en quatorze jours
+
+1. Jour 1, diagnostic : lecture du guide de présentation, du thème et des notes ; liste de ce qui manque.
+2. Jours 2 et 3, plan et méthode : problématique, hypothèses, méthode, plan détaillé, validés par l'étudiant.
+3. Jours 4 à 10, construction : les chapitres prennent forme à partir du terrain de l'étudiant ; point d'étape tous les deux jours sur WhatsApp.
+4. Jours 11 à 13, contrôle : chaque citation confrontée à sa source, pagination, sommaire, table des matières, relecture.
+5. Jour 14, remise : le fichier Word prêt au dépôt.
+
+## Contact
+
+- WhatsApp : +226 65 77 38 87 (https://wa.me/22665773887). C'est le seul canal de réservation.
+- Le site ne collecte aucune donnée et ne dépose aucun cookie ; le dossier composé sur le site reste sur l'appareil de l'étudiant jusqu'à l'envoi du message.
+
+## Pages
+
+- [Offre et réservation](https://aisaa-offre.vercel.app/) : l'offre complète, le parcours de réservation en quatre étapes.
+- [Conditions générales](https://aisaa-offre.vercel.app/conditions) : service, prix, paiement, délai, remboursement, corrections, annulation.
+- [Confidentialité et cookies](https://aisaa-offre.vercel.app/confidentialite) : données, stockage local, WhatsApp, droits, CIL.
+- [Mentions légales](https://aisaa-offre.vercel.app/mentions-legales) : éditeur, hébergeur, licences, accessibilité.
