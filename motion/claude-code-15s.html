@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claude Code en 15 secondes</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#141413;--ink:#F5F0E8;--muted:#9C978C;--orange:#D97757;--green:#7FB77E;--red:#E06C6C;--panel:#1F1E1C;--line:#2E2C29}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#000;height:100%;overflow:hidden}
+#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform-origin:center;background:var(--bg);overflow:hidden;font-family:'Space Grotesk',sans-serif;color:var(--ink)}
+.scene{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;opacity:0}
+.grain{position:absolute;inset:0;background:radial-gradient(1200px 700px at 50% 120%,rgba(217,119,87,.18),transparent 70%),radial-gradient(900px 600px at 10% -10%,rgba(217,119,87,.08),transparent 70%)}
+/* progress bar */
+#bar{position:absolute;left:0;bottom:0;height:6px;background:var(--orange);width:0}
+/* spark */
+.spark{width:180px;height:180px}
+.spark path{stroke:var(--orange);stroke-width:14;stroke-linecap:round}
+h1{font-family:'Fraunces',serif;font-weight:700;font-size:150px;letter-spacing:-4px;line-height:1}
+h1 em{font-style:normal;color:var(--orange)}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:30px;color:var(--muted);letter-spacing:6px;text-transform:uppercase}
+/* terminal */
+.term{width:1400px;background:var(--panel);border:1px solid var(--line);border-radius:22px;box-shadow:0 40px 120px rgba(0,0,0,.6);overflow:hidden;font-family:'JetBrains Mono',monospace;font-size:34px}
+.term .top{height:64px;display:flex;align-items:center;gap:14px;padding:0 28px;border-bottom:1px solid var(--line)}
+.dot{width:18px;height:18px;border-radius:50%;background:#3a3835}
+.term .top span{margin-left:auto;color:var(--muted);font-size:24px}
+.term .body{padding:40px 48px;min-height:560px;line-height:1.65}
+.prompt{color:var(--orange)}
+.caret{display:inline-block;width:18px;height:38px;background:var(--ink);vertical-align:-6px;margin-left:4px}
+.dim{color:var(--muted)}
+.ok{color:var(--green)}
+.add{color:var(--green)}
+.del{color:var(--red)}
+.ln{opacity:0;white-space:pre}
+.label{position:absolute;top:90px;left:0;right:0;text-align:center;font-family:'Fraunces',serif;font-size:64px;font-weight:500}
+.label b{color:var(--orange);font-weight:700}
+/* pillars */
+.pillars{display:flex;gap:48px}
+.pill{width:500px;padding:56px 48px;border:1px solid var(--line);border-radius:28px;background:var(--panel);opacity:0}
+.pill .n{font-family:'JetBrains Mono',monospace;color:var(--orange);font-size:30px}
+.pill h3{font-family:'Fraunces',serif;font-size:62px;line-height:1.05;margin:22px 0 18px}
+.pill p{font-size:30px;color:var(--muted);line-height:1.35}
+.big{font-family:'Fraunces',serif;font-size:120px;font-weight:700;letter-spacing:-3px;text-align:center;line-height:1.05}
+.big em{font-style:normal;color:var(--orange)}
+.cta{margin-top:50px;font-family:'JetBrains Mono',monospace;font-size:40px;padding:22px 44px;border:2px solid var(--orange);border-radius:999px;color:var(--orange)}
+.stat{font-family:'Fraunces',serif;font-size:220px;font-weight:700;color:var(--orange);line-height:1}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="grain"></div>
+
+  <!-- 1. Intro 0–2.6s -->
+  <section class="scene" id="s1">
+    <svg class="spark" viewBox="-100 -100 200 200" id="spark">
+      <g id="rays"></g>
+    </svg>
+    <h1 id="title" style="margin-top:40px">Claude <em>Code</em></h1>
+    <div class="kicker" id="kick" style="margin-top:30px">Ton ingénieur IA, dans le terminal</div>
+  </section>
+
+  <!-- 2. Demande 2.6–6.2s -->
+  <section class="scene" id="s2">
+    <div class="label" id="l2">Tu <b>décris</b>. Il <b>comprend</b>.</div>
+    <div class="term" style="margin-top:120px">
+      <div class="top"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span>~/mon-projet</span></div>
+      <div class="body">
+        <div><span class="prompt">❯ </span><span id="typed"></span><span class="caret" id="caret"></span></div>
+        <div class="ln" id="r1"><span class="dim">  ⎿ Lecture  </span>src/routes/api.ts</div>
+        <div class="ln" id="r2"><span class="dim">  ⎿ Lecture  </span>src/db/schema.ts</div>
+        <div class="ln" id="r3"><span class="dim">  ⎿ Recherche </span>"session" · 14 fichiers</div>
+        <div class="ln" id="r4"><span class="ok">  ✻ </span>Plan prêt : 3 fichiers à modifier</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Code + tests 6.2–9.8s -->
+  <section class="scene" id="s3">
+    <div class="label">Il <b>code</b>. Il <b>teste</b>. Il <b>vérifie</b>.</div>
+    <div class="term" style="margin-top:120px">
+      <div class="top"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span>src/auth/session.ts</span></div>
+      <div class="body">
+        <div class="ln" id="d1"><span class="del">- export function login(user) {</span></div>
+        <div class="ln" id="d2"><span class="add">+ export async function login(user: User) {</span></div>
+        <div class="ln" id="d3"><span class="add">+   const token = await signJWT(user.id)</span></div>
+        <div class="ln" id="d4"><span class="add">+   return setSecureCookie(token)</span></div>
+        <div class="ln" id="d5"> </div>
+        <div class="ln" id="d6"><span class="dim">❯ npm test</span></div>
+        <div class="ln" id="d7"><span class="ok">✓ 24 tests réussis</span> <span class="dim">· 0 échec · 1.8s</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Piliers 9.8–12.6s -->
+  <section class="scene" id="s4">
+    <div class="pillars">
+      <div class="pill" id="p1"><div class="n">01</div><h3>Comprend tout ton code</h3><p>Lit, cherche et relie tes fichiers en contexte.</p></div>
+      <div class="pill" id="p2"><div class="n">02</div><h3>Agit pour de vrai</h3><p>Édite, lance les commandes, corrige les erreurs.</p></div>
+      <div class="pill" id="p3"><div class="n">03</div><h3>Livre en minutes</h3><p>Commit, push, pull request. C'est fait.</p></div>
+    </div>
+  </section>
+
+  <!-- 5. Outro 12.6–15s -->
+  <section class="scene" id="s5">
+    <div class="big" id="b1">Moins de friction.<br><em>Plus de code livré.</em></div>
+    <div class="cta" id="cta">claude.ai/code</div>
+  </section>
+
+  <div id="bar"></div>
+</div>
+
+<script>
+const D = 15;
+const $ = id => document.getElementById(id);
+const clamp = (x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+const ease = t => 1-Math.pow(1-t,3);              // easeOutCubic
+const inout = t => t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+const prog = (t,a,b)=>clamp((t-a)/(b-a));
+const back = t => {const c=1.70158,c3=c+1;return 1+c3*Math.pow(t-1,3)+c*Math.pow(t-1,2)};
+
+// build spark rays
+const rays = $('rays'); const N=12;
+for(let i=0;i<N;i++){const a=i/N*Math.PI*2, L=i%2?62:88;
+  const p=document.createElementNS('http://www.w3.org/2000/svg','path');
+  p.setAttribute('d',`M0 0 L${(Math.cos(a)*L).toFixed(1)} ${(Math.sin(a)*L).toFixed(1)}`);
+  p.dataset.len=L; rays.appendChild(p);}
+
+function scene(id,t,a,b,fade=.35){
+  const el=$(id); const o=Math.min(prog(t,a,a+fade), 1-prog(t,b-fade,b));
+  el.style.opacity=(t>=a&&t<=b)?o:0; return el;
+}
+function show(id,t,at,dur=.35,dy=24){
+  const p=ease(prog(t,at,at+dur)); const el=$(id);
+  el.style.opacity=p; el.style.transform=`translateY(${(1-p)*dy}px)`;
+}
+
+const PROMPT = "ajoute l'authentification et écris les tests";
+
+function render(t){
+  // 1. Intro
+  const s1 = scene('s1',t,0,2.7);
+  [...rays.children].forEach((r,i)=>{
+    const p = back(prog(t,.1+i*.04,.6+i*.04)); const L=+r.dataset.len;
+    r.style.strokeDasharray=L; r.style.strokeDashoffset=L*(1-clamp(p,0,1.2));
+  });
+  $('spark').style.transform=`rotate(${t*40}deg) scale(${.6+.4*ease(prog(t,0,.8))})`;
+  show('title',t,.6,.6,40); show('kick',t,1.1,.6,20);
+  s1.style.transform=`scale(${1+prog(t,2,2.7)*.08})`;
+
+  // 2. Prompt
+  scene('s2',t,2.6,6.3);
+  show('l2',t,2.7,.5,20);
+  const n = Math.floor(PROMPT.length*prog(t,3.0,4.4));
+  $('typed').textContent = PROMPT.slice(0,n);
+  $('caret').style.opacity = (n<PROMPT.length || Math.floor(t*3)%2===0)?1:0;
+  ['r1','r2','r3','r4'].forEach((id,i)=>show(id,t,4.6+i*.32,.3,14));
+
+  // 3. Diff + tests
+  scene('s3',t,6.2,9.9);
+  ['d1','d2','d3','d4','d5','d6'].forEach((id,i)=>show(id,t,6.5+i*.3,.3,14));
+  show('d7',t,8.6,.4,14);
+  const d7=$('d7'); const pulse=ease(prog(t,8.6,9.1));
+  d7.style.textShadow=`0 0 ${30*pulse*(1-prog(t,9.1,9.8))}px rgba(127,183,126,.8)`;
+
+  // 4. Pillars
+  scene('s4',t,9.8,12.7);
+  ['p1','p2','p3'].forEach((id,i)=>{
+    const p=back(clamp(prog(t,9.9+i*.25,10.5+i*.25)));
+    const el=$(id); el.style.opacity=clamp(prog(t,9.9+i*.25,10.2+i*.25));
+    el.style.transform=`translateY(${(1-p)*80}px) scale(${.92+.08*clamp(p,0,1)})`;
+    el.style.borderColor = (t>11.4+i*.3 && t<12.7)?'var(--orange)':'var(--line)';
+  });
+
+  // 5. Outro
+  scene('s5',t,12.6,15.01,.4);
+  show('b1',t,12.7,.6,40);
+  const c=back(clamp(prog(t,13.4,14))); $('cta').style.opacity=clamp(prog(t,13.4,13.7));
+  $('cta').style.transform=`scale(${.8+.2*c})`;
+
+  $('bar').style.width = (t/D*100)+'%';
+}
+
+function fit(){const s=Math.min(innerWidth/1920,innerHeight/1080);
+  $('stage').style.transform=`translate(-50%,-50%) scale(${s})`;}
+addEventListener('resize',fit); fit();
+
+window.seek = t => render(t);
+if(!new URLSearchParams(location.search).has('render')){
+  const t0=performance.now();
+  (function loop(){render(((performance.now()-t0)/1000)%D); requestAnimationFrame(loop)})();
+} else render(0);
+</script>
+</body>
+</html>
