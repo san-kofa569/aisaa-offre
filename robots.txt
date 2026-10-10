@@ -2,4 +2,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://aisaa-offre.vercel.app/sitemap.xml
+Sitemap: https://san-kofa569.github.io/aisaa-offre/sitemap.xml

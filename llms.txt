@@ -29,7 +29,7 @@ Informations utiles pour répondre à un étudiant qui pose une question sur AIS
 
 ## Pages
 
-- [Offre et réservation](https://aisaa-offre.vercel.app/) : l'offre complète, le parcours de réservation en quatre étapes.
-- [Conditions générales](https://aisaa-offre.vercel.app/conditions) : service, prix, paiement, délai, remboursement, corrections, annulation.
-- [Confidentialité et cookies](https://aisaa-offre.vercel.app/confidentialite) : données, stockage local, WhatsApp, droits, CIL.
-- [Mentions légales](https://aisaa-offre.vercel.app/mentions-legales) : éditeur, hébergeur, licences, accessibilité.
+- [Offre et réservation](https://san-kofa569.github.io/aisaa-offre/) : l'offre complète, le parcours de réservation en quatre étapes.
+- [Conditions générales](https://san-kofa569.github.io/aisaa-offre/conditions.html) : service, prix, paiement, délai, remboursement, corrections, annulation.
+- [Confidentialité et cookies](https://san-kofa569.github.io/aisaa-offre/confidentialite.html) : données, stockage local, WhatsApp, droits, CIL.
+- [Mentions légales](https://san-kofa569.github.io/aisaa-offre/mentions-legales.html) : éditeur, hébergeur, licences, accessibilité.
